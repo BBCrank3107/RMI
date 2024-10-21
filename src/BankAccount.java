@@ -12,6 +12,7 @@ public class BankAccount extends UnicastRemoteObject implements BankInterface {
     }
 
     // Login
+ // Login
     public synchronized boolean login(int accountNumber, String password) throws RemoteException {
         try {
             // Bắt đầu transaction
@@ -63,14 +64,15 @@ public class BankAccount extends UnicastRemoteObject implements BankInterface {
             }
         }
     }
-    public boolean signup(String name, int accountNumber, String password) throws RemoteException {
+    public boolean signup(String name, int accountNumber,int balance, boolean logged,  String password) throws RemoteException {
 	    try {
-	        String query = "INSERT INTO account (name, number, password, is_logged_in) VALUES (?, ?, ?, ?)";
+	        String query = "INSERT INTO account (name, number, balance, is_logged_in, password) VALUES (?, ?, ?, ?, ?)";
 	        PreparedStatement stmt = con.prepareStatement(query);
 	        stmt.setString(1, name);
 	        stmt.setInt(2, accountNumber);
-	        stmt.setString(3, password);
-	        stmt.setInt(4, 0);
+	        stmt.setInt(3, balance);
+	        stmt.setBoolean(4, logged);
+	        stmt.setString(5, password);
 	        int rowsInserted = stmt.executeUpdate();
 
 	        if (rowsInserted > 0) {

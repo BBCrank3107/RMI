@@ -35,12 +35,25 @@ public class BankServer extends JFrame {
 
     private void startServer() {
         try {
+            // Đặt IP mà RMI sẽ lắng nghe trước khi tạo registry
+            System.setProperty("java.rmi.server.hostname", "192.168.28.113");
+            
+            // Khởi tạo registry
+            try {
+                java.rmi.registry.LocateRegistry.createRegistry(1099);
+                System.out.println("RMI registry started on port 1099");
+            } catch (Exception ex) {
+                System.out.println("RMI registry already running.");
+            }
+
+            // Đăng ký đối tượng RMI
             BankInterface h = new BankAccount();
-            Naming.rebind("rmi://localhost:2008/BankService", h);
+            Naming.rebind("rmi://192.168.28.113:1099/BankService", h);
             statusLabel.setText("Server is connected and ready for operation");
             startButton.setEnabled(false); // Vô hiệu hóa nút Start sau khi server khởi chạy
         } catch (Exception e) {
             statusLabel.setText("Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
